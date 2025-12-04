@@ -215,9 +215,9 @@ class Ntfy(object):
 
     def __init__(self, isso):
         self.isso = isso
-        self.conf = isso.conf.section("ntfy")
-        self.url = self.conf.get("ntfy", "url")
-        self.topic = self.conf.get("ntfy", "topic")
+        ntfy_conf = isso.conf.section("ntfy")
+        self.url = ntfy_conf.get("url")
+        self.topic = ntfy_conf.get("topic")
 
     def __iter__(self):
 
