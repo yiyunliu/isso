@@ -244,7 +244,7 @@ class Ntfy(object):
         self.notify("\n".join(response_strs))
 
     def _edit_comment(self, comment):
-        self.notify(f"comment {comment.id} edited: {json.dumps(comment)}")
+        self.notify(f"comment {comment["id"]} edited: {json.dumps(comment)}")
 
     def _delete_comment(self, id):
         self.notify(f"comment {id} deleted")
