@@ -218,6 +218,14 @@ class Ntfy(object):
         self.url = isso.conf.get("ntfy", "url")
         self.topic = isso.conf.get("ntfy", "topic")
 
+    def __iter__(self):
+
+        yield "comments.new:new-thread", self._new_thread
+        yield "comments.new:finish", self._new_comment
+        yield "comments.edit", self._edit_comment
+        yield "comments.delete", self._delete_comment
+        yield "comments.activate", self._activate_comment
+
     def _new_thread(self, thread):
         self.notify("new thread %(id)s: %(title)s" % thread)
 
