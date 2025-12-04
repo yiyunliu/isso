@@ -257,6 +257,7 @@ class Ntfy(object):
         topic_url = urljoin(self.conf.get("url"),self.conf.get("topic"))
         try:
             with urlopen(topic_url,str.encode(encoding='utf-8')) as response:
+                pass
         except URLError as e:
             if hasattr(e, 'reason'):
             logger.exception(f"Failed to reach the ntfy server.\nError code: {e.code}" )
