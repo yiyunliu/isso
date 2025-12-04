@@ -216,6 +216,7 @@ class Ntfy(object):
     def __init__(self, isso):
         self.isso = isso
         self.conf = isso.conf.section('ntfy')
+        self.public_endpoint = isso.conf.get("server", "public-endpoint") or local("host")
 
     def __iter__(self):
 
