@@ -216,8 +216,7 @@ class Ntfy(object):
     def __init__(self, isso):
         logger.info({section: dict(isso.conf[section]) for section in isso.conf.sections()})
         self.isso = isso
-        url = isso.conf['ntfy']['url']
-        topic = isso.conf['ntfy']['topic']
+        self.conf = isso.conf.get('ntfy')
 
     def __iter__(self):
 
@@ -254,7 +253,7 @@ class Ntfy(object):
         self.notify(f"comment {thread.id}s activated")
 
     def notify(self, str):
-        response = requests.post(urljoin(url,topic), data = str.encode(encoding='utf-8'))
+        response = requests.post(urljoin(self.conf.get(url),self.conf.get(topic)), data = str.encode(encoding='utf-8'))
         if response.status_code != 200:
             logger.exception("failed to push notifications to ntfy.sh with response \"%s\"" % response.text)
 
