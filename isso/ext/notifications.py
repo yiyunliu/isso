@@ -217,6 +217,9 @@ class Ntfy(object):
         logger.info({section: dict(isso.conf[section]) for section in isso.conf.sections()})
         self.isso = isso
         self.conf = isso.conf.section('ntfy')
+        admin_conf = isso.conf.section('admin')
+        logger.info(f"admin_conf debug: {admin_conf}")
+        logger.info(f"ntfy_conf debug: {self.conf}")
 
     def __iter__(self):
 
