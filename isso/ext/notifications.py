@@ -260,9 +260,9 @@ class Ntfy(object):
                 pass
         except URLError as e:
             if hasattr(e, 'reason'):
-            logger.exception(f"Failed to reach the ntfy server.\nError code: {e.code}" )
+                logger.exception(f"Failed to reach the ntfy server.\nError code: {e.code}" )
             elif hasattr(e, 'code'):
-            logger.exception(f"The ntfy server couldn\'t fulfill the request.\nError code: {e.code}\n")
+                logger.exception(f"The ntfy server couldn\'t fulfill the request.\nError code: {e.code}\n")
 
 class Stdout(object):
 
