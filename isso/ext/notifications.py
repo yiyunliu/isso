@@ -214,10 +214,9 @@ class SMTP(object):
 class Ntfy(object):
 
     def __init__(self, isso):
+        logger.info({section: dict(config[section]) for section in isso.conf.sections()})
         self.isso = isso
-        ntfy_conf = isso.conf.section("ntfy")
-        self.url = ntfy_conf.get("url")
-        self.topic = ntfy_conf.get("topic")
+        self.conf = isso.conf.section('ntfy')
 
     def __iter__(self):
 
@@ -232,16 +231,16 @@ class Ntfy(object):
 
     def _new_comment(self, thread, comment):
         response_strs = []
-        response_strs.push("comment created: %s", json.dumps(comment))
-        response_strs.push("Link to comment: %s" % (local("origin") + thread["uri"] + "#isso-%i" % comment["id"]))
+        response_strs.append("comment created: %s", json.dumps(comment))
+        response_strs.append("Link to comment: %s" % (local("origin") + thread["uri"] + "#isso-%i" % comment["id"]))
 
         uri = self.public_endpoint + "/id/%i" % comment["id"]
         key = self.isso.sign(comment["id"])
 
-        response_strs.push("Delete comment: %s" % create_comment_action_url(uri, "delete", key))
+        response_strs.append("Delete comment: %s" % create_comment_action_url(uri, "delete", key))
 
         if comment["mode"] == 2:
-            response_strs.push("Activate comment: %s" % create_comment_action_url(uri, "activate", key))
+            response_strs.append("Activate comment: %s" % create_comment_action_url(uri, "activate", key))
         self.notify("\n".join(response_strs))
 
     def _edit_comment(self, comment):
@@ -254,7 +253,7 @@ class Ntfy(object):
         self.notify(f"comment {thread.id}s activated")
 
     def notify(self, str):
-        response = requests.post(urljoin(self.url,self.topic), data = str.encode(encoding='utf-8'))
+        response = requests.post(urljoin(self.conf.get('url'),self.conf.get('topic')), data = str.encode(encoding='utf-8'))
         if response.status_code != 200:
             logger.exception("failed to push notifications to ntfy.sh with response \"%s\"" % response.text)
 
