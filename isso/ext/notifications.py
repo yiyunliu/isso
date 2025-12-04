@@ -214,9 +214,8 @@ class SMTP(object):
 class Ntfy(object):
 
     def __init__(self, isso):
-        logger.info({section: dict(isso.conf[section]) for section in isso.conf.sections()})
         self.isso = isso
-        self.conf = isso.conf.get('ntfy')
+        self.conf = isso.conf.section('ntfy')
 
     def __iter__(self):
 
