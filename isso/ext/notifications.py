@@ -253,7 +253,7 @@ class Ntfy(object):
         self.notify(f"comment {thread.id}s activated")
 
     def notify(self, str):
-        response = requests.post(urljoin(self.conf.get(url),self.conf.get(topic)), data = str.encode(encoding='utf-8'))
+        response = requests.post(urljoin(self.conf.get("url"),self.conf.get("topic")), data = str.encode(encoding='utf-8'))
         if response.status_code != 200:
             logger.exception("failed to push notifications to ntfy.sh with response \"%s\"" % response.text)
 
