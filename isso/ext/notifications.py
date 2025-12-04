@@ -250,7 +250,7 @@ class Ntfy(object):
         self.notify(f"comment {id} deleted")
 
     def _activate_comment(self, thread, comment):
-        self.notify(f"comment {thread.id}s activated")
+        self.notify(f"comment {thread}s activated")
 
     def notify(self, str):
         response = requests.post(urljoin(self.conf.get("url"),self.conf.get("topic")), data = str.encode(encoding='utf-8'))
