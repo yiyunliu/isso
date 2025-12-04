@@ -231,16 +231,16 @@ class Ntfy(object):
 
     def _new_comment(self, thread, comment):
         response_strs = []
-        response_strs.append("comment created: %s", json.dumps(comment))
-        response_strs.append("Link to comment: %s" % (local("origin") + thread["uri"] + "#isso-%i" % comment["id"]))
+        response_strs.append(f"comment created: {json.dumps(comment)}")
+        response_strs.append(f"Link to comment: {(local("origin") + thread["uri"] + "#isso-%i" % comment["id"])}")
 
         uri = self.public_endpoint + "/id/%i" % comment["id"]
         key = self.isso.sign(comment["id"])
 
-        response_strs.append("Delete comment: %s" % create_comment_action_url(uri, "delete", key))
+        response_strs.append(f"Delete comment: {create_comment_action_url(uri, "delete", key)}")
 
         if comment["mode"] == 2:
-            response_strs.append("Activate comment: %s" % create_comment_action_url(uri, "activate", key))
+            response_strs.append(f"Activate comment: {create_comment_action_url(uri, "activate", key)}")
         self.notify("\n".join(response_strs))
 
     def _edit_comment(self, comment):
