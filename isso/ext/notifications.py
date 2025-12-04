@@ -5,11 +5,12 @@ import json
 import smtplib
 import socket
 import time
+import requests
 
 from _thread import start_new_thread
 from email.message import EmailMessage
 from email.utils import formatdate
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 import logging
 logger = logging.getLogger("isso")
@@ -209,6 +210,44 @@ class SMTP(object):
             else:
                 break
 
+
+class Ntfy(object):
+
+    def __init__(self, isso):
+        self.isso = isso
+        self.url = isso.conf.get("ntfy", "url")
+        self.topic = isso.conf.get("ntfy", "topic")
+
+    def _new_thread(self, thread):
+        self.notify("new thread %(id)s: %(title)s" % thread)
+
+    def _new_comment(self, thread, comment):
+        response_strs = []
+        response_strs.push("comment created: %s", json.dumps(comment))
+        response_strs.push("Link to comment: %s" % (local("origin") + thread["uri"] + "#isso-%i" % comment["id"]))
+
+        uri = self.public_endpoint + "/id/%i" % comment["id"]
+        key = self.isso.sign(comment["id"])
+
+        response_strs.push("Delete comment: %s" % create_comment_action_url(uri, "delete", key))
+
+        if comment["mode"] == 2:
+            response_strs.push("Activate comment: %s" % create_comment_action_url(uri, "activate", key))
+        self.notify("\n".join(response_strs))
+
+    def _edit_comment(self, comment):
+        self.notify(f"comment {comments.id} edited: {json.dumps(comment)}")
+
+    def _delete_comment(self, id):
+        self.notify(f"comment {id} deleted")
+
+    def _activate_comment(self, thread, comment):
+        self.notify(f"comment {thread.id}s activated")
+
+    def notify(self, str):
+        response = requests.post(urljoin(self.url,self.topic), data = str.encode(encodings='utf-8'))
+        if response.status_code != 200:
+            logger.exception("failed to push notifications to ntfy.sh with response \"%s\"" % response.text)
 
 class Stdout(object):
 
